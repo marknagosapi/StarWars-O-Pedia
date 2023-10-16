@@ -1,39 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, SafeAreaView, ImageBackground, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, StyleSheet, SafeAreaView, ImageBackground, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { useAxiosFetch } from '../hooks/useAxiosFetch';
 import MovieCard from './MovieCard'
 
 
-const API_URL = 'https://swapi.dev/api/films'; // Replace with your API endpoint
-
 function MainScreen({navigation}) {
-  const [data, setData] = useState([]);
-  const [isLoading, setLoading] = useState(true);
 
-  useEffect(() => {
-    // Fetch data from the API
-    fetch(API_URL)
-      .then((response) => response.json())
-      .then((responseData) => {
-        setData(responseData.results);
-     
-      })
-      .catch((error) => {
-        console.error('Error fetching data:', error);
-      });
-  }, []);
+  const {data, error, isLoading } =  useAxiosFetch('/films');
 
   return  (
     <ImageBackground
-    source={require("../assets/background.jpeg")}
+    source={require("../assets/images/background.jpeg")}
     resizeMode="repeat"
     style={styles.imgBackground}
   >
      <SafeAreaView style={styles.container}>
         <Text style={styles.header}>STAR WARS MOVIES</Text>
+        {isLoading ? (
+          <View style={styles.container}>
+            <ActivityIndicator size="large" color="#ad7d37" />
+          </View>
+        ) : data ? (
         <FlatList
           style={styles.movieList} 
           data={data}
           keyExtractor={(item) => item.episode_id}
+          
           renderItem={({ item }) => (
             
             <TouchableOpacity onPress={() => navigation.navigate("MovieDetailScreen")}>
@@ -43,10 +35,13 @@ function MainScreen({navigation}) {
           )}
           numColumns={2}
         />
-        
+        ) : (<View style={styles.container}>
+              <Text style={styles.header}>{error}</Text>
+            </View>)}
     </SafeAreaView>
     </ImageBackground>
   );
+          
 };
 
 const styles = StyleSheet.create({
@@ -57,7 +52,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   header: {
-    fontSize: 24,
+    fontSize: 30,
+    fontFamily: "Arial",
+    paddingTop: 16,
     fontWeight: 'bold',
     marginBottom: 16,
     alignSelf: 'center',
