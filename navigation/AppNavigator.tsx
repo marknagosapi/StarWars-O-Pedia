@@ -8,14 +8,15 @@ const Stack = createStackNavigator();
 const AppNavigation = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{
-            headerShown: false
-        }}>
-        <Stack.Screen name="MainScreen" component={MainScreen} />
+      <Stack.Navigator>
+        <Stack.Screen name="MainScreen" component={MainScreen}  />
         <Stack.Screen name="MovieDetailScreen" component={MovieDetailScreen} />
       </Stack.Navigator>
+      
     </NavigationContainer>
+    
   );
+  
 }
 
 export default AppNavigation;

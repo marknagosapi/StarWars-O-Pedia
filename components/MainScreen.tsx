@@ -7,6 +7,9 @@ import MovieCard from './MovieCard'
 function MainScreen({navigation}) {
 
   const {data, error, isLoading } =  useAxiosFetch('/films');
+  const navigateToMovieDetailScreen = (movie) => {
+    navigation.navigate('MovieDetailScreen', { movie });
+  };
 
   return  (
     <ImageBackground
@@ -25,10 +28,9 @@ function MainScreen({navigation}) {
           style={styles.movieList} 
           data={data}
           keyExtractor={(item) => item.episode_id}
-          
           renderItem={({ item }) => (
             
-            <TouchableOpacity onPress={() => navigation.navigate("MovieDetailScreen")}>
+            <TouchableOpacity onPress={() => navigateToMovieDetailScreen(item)}>
               <MovieCard movie={item} ></MovieCard>
             </TouchableOpacity>
 
@@ -50,6 +52,7 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     alignItems: "center",
     justifyContent: "center",
+    marginBottom: 20
   },
   header: {
     fontSize: 30,
@@ -82,5 +85,7 @@ const styles = StyleSheet.create({
   },
   
 });
+
+
 
 export default MainScreen;
